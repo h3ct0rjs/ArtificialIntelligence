@@ -1,9 +1,16 @@
-#Global Variable
-#Index  Medellin Barranquilla Cartagena Monteria  Bogota Neiva Santa Marta Armenia Pereira Cali 
+# Global Variable
+# Index  Medellin Barranquilla Cartagena Monteria  Bogota Neiva Santa
+# Marta Armenia Pereira Cali
+from src.util import *
+from src.core import *
+from pprint import pprint 
+from time import sleep
+
 gnHash = {}
 hnHash = {}
-cities = ['Medellin','Barranquilla','Cartagena','Monteria',',''Bogota','Neiva','Santa','Marta','Armenia','Pereira','Cali']
-cityindex =[i for i in enumerate(cities)]
+cities = ['Medellin', 'Barranquilla', 'Cartagena', 'Monteria',
+          ',''Bogota', 'Neiva', 'SantaMarta', 'Armenia', 'Pereira', 'Cali']
+cityindex = [i for i in enumerate(cities)]
 
 
 def citymenu():
@@ -22,19 +29,21 @@ def citymenu():
 9. Pereira.
 10. Cali.
         """ )
-    choices.append(int(input("Seleccione Ciudad Origen:>> ")))
-    choices.append(int(input("Seleccione Ciudad Destino:>> ")))
+    choices.append(
+        int(input("{}Seleccione Ciudad Origen:{}$ {} ".format(white, red, reset))))
+    choices.append(
+        int(input("{}Seleccione Ciudad Destino:{}$ {}".format(white, red, reset))))
     choices = tuple(choices)
     return choices
 
+
 def options():
     x = citymenu()
+
     processFiles()
-    Graph = Grafo()
 
 
 def processFiles():
-    
     with open('data/gn.txt', 'r') as gn:
         for line in gn.readlines()[1:]:
             tmp = line.strip('\n').split(';')
@@ -45,12 +54,16 @@ def processFiles():
                     nl.append('x')
                 else:
                     nl.append(float(i))
-            gnHash[tmp[0]] = nl
+            gnHash[tmp[0]] = list(zip(cities, nl))
+    sleep(5)
+    Grafo = gnHash  # Representacion del Grafo
+    print('\n{}MetaInformacion del Grafo'.format(ok))
+    print('\n{}**************************'.format(white))
+    print('{}{}INFORMACION  DEL GRAFO {}: '.format(bold, red, reset))
+    print('{}**************************'.format(white))
+    pprint(Grafo)
+    sleep(5)
 
-    print('***********Hash***********')
-    print('Costo de Camino: ')
-    print('**************************')
-    print(gnHash)
 
     with open('data/hn.txt', 'r') as hn:
         for linex in hn.readlines()[1:]:
@@ -62,50 +75,19 @@ def processFiles():
                     nl.append('x')
                 else:
                     nl.append(float(i))
-            hnHash[tmp[0]] = nl
-    print('\n***********Hash***********')
-    print('Valor Heuristico:           ')
-    print('**************************')
-    print(hnHash)
-
-class Nodo(object):
-    def __init__(self, pos=[0, 0], padre=None):
-        self.pos = pos
-        self.padre = padre
-        self.h = distancia(self.pos, pos_f)
- 
-        if self.padre == None:
-            self.g = 0
-        else:
-            self.g = self.padre.g + 1
-        self.f = self.g + self.h
+            hnHash[tmp[0]] = list(zip(cities, nl))
+    #print('\n{}**************************'.format(white))
+    #print('{}{}INFORMACION  DE HEURISTICA {}: '.format(bold, red, reset))
+    #print('{}**************************'.format(white))
+    #pprint(hnHash)  #Pone como en un Json
 
 
+def astarmethod(Grafo, origen='Medellin', destino='SantaMarta'):
 
-class Graph(object):
+    if origen == destino:
+        return
+    Abiertos = set()
+    Cerrados = set()
 
-    def __init__(self):
-        self.nodes = []
-
-    def add(self, node):
-        self.nodes.append(node)
-
-    def astar(self, start, end, heuristic=None):
-        pass
-
-
-def num_to_city(number):
-    number = str(number)
-    switcher = {
-        '1': "Medellin",
-        '2': 'Barranquilla',
-        '3': 'Cartagena',
-        '4': 'Monteria',
-        '5': 'Bogota',
-        '6': 'Neiva',
-        '7': 'Santa Marta',
-        '8': 'Armenia',
-        '9': 'Pereira',
-        '10': 'Cali'
-    }
-    return switcher.get(number, "Wrong index")
+    heapmin = []
+    abiertos.add(origen)
