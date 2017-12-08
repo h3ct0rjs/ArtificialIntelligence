@@ -16,7 +16,7 @@ window.fill(white)
 end=False
 clock=pygame.time.Clock()
 
-font=pygame.font.Font(None,25)
+font=pygame.font.Font("fonts\pizza.ttf",25)
 
 pygame.camera.init()
 cameras=pygame.camera.list_cameras()
@@ -26,17 +26,33 @@ cam.start()
 action=0
 maximum=0
 speed=0
+image = cam.get_image()
+time,label,result=core("temp.jpeg")
+
 if __name__ == '__main__':
 
 	while not end:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				end=True
+			if event.type==pygame.KEYDOWN:
+				if event.key==pygame.K_KP5:				
+					print ("Capture")
+					pygame.image.save(image,'temp.jpeg')
+					time,label,result=core("temp.jpeg")
+					action=0
+					maximum=0
 		window.fill(white)
+
+
 		image = cam.get_image()
-		pygame.image.save(image,'temp.jpeg')
+		
+
+
+
+		
 		window.blit(image,(0,0))
-		time,label,result=core("temp.jpeg")
+		
 
 		speed+=1
 		xpos=50
@@ -54,17 +70,17 @@ if __name__ == '__main__':
 				maximum=action
 				flag=counter
 			#print (i)
-			window.blit(font.render(str(i)+" ",0,black),(xpos,ypos))
+			i=float(i)*100
+			window.blit(font.render(str(round(i,2))+" %",0,black),(xpos,ypos))
 			ypos+=30
 			counter+=1
 		
 		
-		action=0
-		maximum=0
-		if speed>=4 and speed<5:
-			keyboard.press('space')
-		if speed>=5:
-			keyboard.release('space')
+		
+		if speed>=3 and speed<7:
+			keyboard.press('s')
+		if speed>=7:
+			keyboard.release('s')
 			speed=0
 		if flag==0: #fist
 			keyboard.release('w+a')
@@ -73,23 +89,23 @@ if __name__ == '__main__':
 			keyboard.press('w') 
 
 			#print('Presiono arriba')
-		if flag==1: #one
+		if flag==1: #metal
 			keyboard.release('w')
 			keyboard.release('s')
 			keyboard.release('w+d')
 			keyboard.press('w+a')
 			#print('Presiono izquierda')
-		if flag==2: #stop
-			keyboard.release('w+a')
-			keyboard.release('w')
-			keyboard.release('w+d')
-			keyboard.press('s')
-			#print('Presiono abajo')
-		if flag==3: #thumpsup
+		if flag==2: #paz
 			keyboard.release('w+a')
 			keyboard.release('s')
 			keyboard.release('w')
 			keyboard.press('w+d')
 			#print('Presiono derecha')
+		if flag==3: #stop
+			keyboard.release('w+a')
+			keyboard.release('w')
+			keyboard.release('w+d')
+			keyboard.press('s')
+			#print('Presiono abajo')
 		clock.tick(90)
 		pygame.display.flip()  
